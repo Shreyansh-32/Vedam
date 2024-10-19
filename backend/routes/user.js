@@ -125,13 +125,19 @@ userRouter.post("/addcart", userMiddleware, async (req, res) => {
     });
 
     if (prod) {
-      await cartModel.updateOne(
-        { productId: new ObjectId(productId) },
-        {
-          quantity: prod.quantity + quantity,
-        }
-      );
-
+      if(prod.quantity + quantity <= 0){
+        await cartModel.deleteOne({
+          productId: new ObjectId(productId),
+        });
+      }
+      else{
+        await cartModel.updateOne(
+          { productId: new ObjectId(productId) },
+          {
+            quantity: prod.quantity + quantity,
+          }
+        );
+      }
       res.status(200).json({
         message: "Updated cart successfully",
       });

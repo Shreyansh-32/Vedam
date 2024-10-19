@@ -19,7 +19,7 @@ adminRouter.post("/signup", async (req, res) => {
   const Schema = zod.object({
     email: zod.string().email(),
     password: zod.string(),
-    firstName: zod.string(),
+    firstName: zod.string().min(2).max(30),
     lastName: zod.string(),
     phone: zod.number(),
   });
@@ -68,30 +68,42 @@ adminRouter.post("/signup", async (req, res) => {
 adminRouter.post("/signin", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
+  const Shema = zod.object({
+    email: zod.string().email(),
+    password: zod.string(),
+  });
 
   try {
-    const admin = await adminModel.findOne({ email });
+    const response = Shema.safeParse({ email, password });
+    if (response.success) {
+      const admin = await adminModel.findOne({ email });
 
-    if (admin) {
-      const comparePassword = await bcrypt.compare(password, admin.password);
+      if (admin) {
+        const comparePassword = await bcrypt.compare(password, admin.password);
 
-      if (comparePassword) {
-        const token = jwt.sign(
-          { id: admin._id },
-          process.env.JWT_ADMIN_PASSWORD
-        );
-        res.status(200).json({
-          message: "Signed in successfully",
-          token: token,
-        });
+        if (comparePassword) {
+          const token = jwt.sign(
+            { id: admin._id },
+            process.env.JWT_ADMIN_PASSWORD
+          );
+          res.status(200).json({
+            message: "Signed in successfully",
+            token: token,
+          });
+        } else {
+          res.status(403).json({
+            message: "Incorrect password",
+          });
+        }
       } else {
         res.status(403).json({
-          message: "Incorrect password",
+          message: "Admin with given email doesn't exist",
         });
       }
     } else {
       res.status(403).json({
-        message: "Admin with given email doesn't exist",
+        message: "Incorrect input format",
+        error: response.error.issues,
       });
     }
   } catch (err) {
@@ -119,14 +131,22 @@ adminRouter.post("/addproduct", adminMiddleware, async (req, res) => {
       writer,
       seller: new ObjectId(seller),
     });
-    console.log(prod);
+    // console.log(prod);
     if (prod) {
-      await productModel.updateOne(
-        { title, writer, seller: new ObjectId(seller) },
-        {
-          quantity: prod.quantity + quantity,
-        }
-      );
+      if (prod.quantity + quantity < 0) {
+        await productModel.deleteOne({
+          title,
+          writer,
+          seller: new ObjectId(seller),
+        });
+      } else {
+        await productModel.updateOne(
+          { title, writer, seller: new ObjectId(seller) },
+          {
+            quantity: prod.quantity + quantity,
+          }
+        );
+      }
       res.status(200).json({
         message: "Product updated successfully",
       });
@@ -153,6 +173,42 @@ adminRouter.post("/addproduct", adminMiddleware, async (req, res) => {
   }
 });
 
+adminRouter.delete("/deleteproduct", adminMiddleware, async (req, res) => {
+  const { title, writer, seller } = req.body;
+
+  try {
+    const prod = await productModel.findOne({
+      title,
+      writer,
+      seller: new ObjectId(seller),
+    });
+
+    // console.log(prod);
+
+    if (prod) {
+      await productModel.deleteOne({
+        title,
+        writer,
+        seller: new ObjectId(seller),
+      });
+      res.status(200).json({
+        message: "Product deleted successfully",
+      });
+    } else {
+      res.status(403).json({
+        message: "Product not found",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
 module.exports = {
   adminRouter: adminRouter,
 };
+
+//[{title , description , seller , writer , page , price , quantity , imageUrl}]
+//header , body , query , cookie
