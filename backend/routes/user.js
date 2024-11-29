@@ -15,7 +15,19 @@ userRouter.post("/signin", async (req, res) => {
 
   const Shema = zod.object({
     email: zod.string().email(),
-    password: zod.string(),
+    password: zod.string()
+    .min(8, { message: 'minLengthErrorMessage' })
+    .max(20, { message: 'maxLengthErrorMessage' })
+    .refine((password) => /[A-Z]/.test(password), {
+      message: 'uppercaseErrorMessage',
+    })
+    .refine((password) => /[a-z]/.test(password), {
+      message: 'lowercaseErrorMessage',
+    })
+    .refine((password) => /[0-9]/.test(password), { message: 'numberErrorMessage'})
+    .refine((password) => /[!@#$%^&*]/.test(password), {
+      message: 'specialCharacterErrorMessage',
+    }),
   });
 
   try {
@@ -28,7 +40,7 @@ userRouter.post("/signin", async (req, res) => {
         const comparePassword = await bcrypt.compare(password, user.password);
         if (comparePassword) {
           const token = jwt.sign(
-            { id: user._id },
+            { id: user._id, email: user.email },
             process.env.JWT_USER_PASSWORD
           );
           res.status(200).json({
@@ -64,13 +76,24 @@ userRouter.post("/signup", async (req, res) => {
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const phone = req.body.phone;
-
   const Schema = zod.object({
     email: zod.string().email(),
-    password: zod.string(),
+    password: zod.string()
+    .min(8, { message: 'minLengthErrorMessage' })
+    .max(20, { message: 'maxLengthErrorMessage' })
+    .refine((password) => /[A-Z]/.test(password), {
+      message: 'uppercaseErrorMessage',
+    })
+    .refine((password) => /[a-z]/.test(password), {
+      message: 'lowercaseErrorMessage',
+    })
+    .refine((password) => /[0-9]/.test(password), { message: 'numberErrorMessage' })
+    .refine((password) => /[!@#$%^&*]/.test(password), {
+      message: 'specialCharacterErrorMessage',
+    }),
     firstName: zod.string(),
     lastName: zod.string(),
-    phone: zod.number(),
+    phone: zod.number().gte(1000000000).lte(9999999999),
   });
 
   try {
@@ -83,24 +106,28 @@ userRouter.post("/signup", async (req, res) => {
     });
 
     if (response.success) {
-      const user = userModel.findOne({email});
-
-      if(!user){
+      const user = await userModel.findOne({ email });
+      if (!user) {
         const hashedPassword = await bcrypt.hash(password, 5);
-      await userModel.create({
-        email: email,
-        password: hashedPassword,
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-      });
-      res.status(200).json({
-        message: "Signed up successfully",
-      });
-      }
-      else{
+        await userModel.create({
+          email: email,
+          password: hashedPassword,
+          firstName: firstName,
+          lastName: lastName,
+          phone: phone,
+        });
+        const userA = await userModel.findOne({ email });
+        const token = jwt.sign(
+          { id: userA._id, email: userA.email },
+          process.env.JWT_USER_PASSWORD
+        );
+        res.status(200).json({
+          message: "Signed up successfully",
+          token: token,
+        });
+      } else {
         res.status(403).json({
-          "message" : "User with given email exist"
+          message: "User with given email exist",
         });
       }
     } else {
@@ -125,12 +152,11 @@ userRouter.post("/addcart", userMiddleware, async (req, res) => {
     });
 
     if (prod) {
-      if(prod.quantity + quantity <= 0){
+      if (prod.quantity + quantity <= 0) {
         await cartModel.deleteOne({
           productId: new ObjectId(productId),
         });
-      }
-      else{
+      } else {
         await cartModel.updateOne(
           { productId: new ObjectId(productId) },
           {
