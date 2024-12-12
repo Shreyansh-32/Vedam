@@ -17,6 +17,7 @@ const productSchema = mongoose.Schema({
     writer : String,
     page : Number,
     price : Number,
+    category : String,
     seller : {type : ObjectId , ref : 'admin'},
     quantity : Number,
     imageUrl : String

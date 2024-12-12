@@ -8,8 +8,7 @@ productRouter.get('/', async (req , res) => {
     try{
         const products = await productModel.find({});
         res.status(200).json({
-            "message" : "Product retrieved successfully",
-            products : products
+            products
         });
     }
     catch(err){
@@ -24,14 +23,41 @@ productRouter.get('/book' , async (req , res) => {
     try{
         const product = await productModel.findOne({_id : productId});
         res.status(200).json({
-            "message" : "Product retrieved successfully",
-            product : product
+            product
         });
     }
     catch(err){
         res.status(500).json({
             "message" : "Internal server error"
         });
+    }
+});
+
+productRouter.get("/search/:book" , async(req , res) => {
+    const {book} = req.params;
+
+    try{
+        const books = await productModel.find({
+            $or : [{title : book} , {writer : book}]
+        });
+        res.status(200).json({books});
+    }
+    catch(err){
+        res.status(500).json({"message" : "Internal server error"});
+    }
+});
+
+productRouter.get("/search/category/:book" , async(req , res) => {
+    const {book} = req.params;
+
+    try{
+        const books = await productModel.find({
+            category : book
+        });
+        res.status(200).json({books});
+    }
+    catch(err){
+        res.status(500).json({"message" : "Internal server error"});
     }
 });
 

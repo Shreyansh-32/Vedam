@@ -25,6 +25,25 @@ function userMiddleware(req , res , next){
 
 }
 
+function userIdMiddleware(req , res , next){
+    const token = req.headers.token;
+
+    try{
+        if(token){
+            const decoded = jwt.decode(token , process.env.JWT_USER_PASSWORD);
+            req.userId = decoded.userId;
+            next();
+        }
+        else{
+            res.status(404).json({"message" : "User is not signed in"});
+        }
+    }
+    catch(err){
+        res.status(500).json({"message" : "Internal server error"});
+    }
+}
+
 module.exports = {
-    userMiddleware : userMiddleware
+    userMiddleware : userMiddleware,
+    userIdMiddleware : userIdMiddleware
 }

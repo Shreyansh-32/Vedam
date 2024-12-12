@@ -17,7 +17,7 @@ const Navbar = () => {
         <div className="flex items-center h-[50px] relative">
           <input
             type="text"
-            className="w-[550px] h-full bg-[#FAF1DA] rounded-full px-[26px] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic border-2 border-[#EECB83] shadow-md"
+            className="w-[550px] h-full bg-[#FAF1DA] rounded-full px-[26px] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic border-2 border-[#EECB83] shadow-md focus:outline-none focus:border-[#70401ec1]"
             placeholder="Search book or authors ..."
           />
           <button className="absolute right-4">

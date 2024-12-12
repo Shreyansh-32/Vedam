@@ -4,7 +4,7 @@ const { userModel, cartModel, productModel, ordersModel } = require("../db");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { ObjectId } = require("mongodb");
-const { userMiddleware } = require("../middlewares/user");
+const { userMiddleware, userIdMiddleware } = require("../middlewares/user");
 const zod = require("zod");
 
 const userRouter = Router();
@@ -143,8 +143,9 @@ userRouter.post("/signup", async (req, res) => {
   }
 });
 
-userRouter.post("/addcart", userMiddleware, async (req, res) => {
-  const { productId, userId, quantity } = req.body;
+userRouter.post("/addcart", userIdMiddleware, userMiddleware, async (req, res) => {
+  const { productId , quantity } = req.body;
+  const userId = req.userId;
 
   try {
     const prod = await cartModel.findOne({
@@ -185,8 +186,9 @@ userRouter.post("/addcart", userMiddleware, async (req, res) => {
   }
 });
 
-userRouter.post("/orders", userMiddleware, async (req, res) => {
-  const { productId, userId, quantity } = req.body;
+userRouter.post("/orders" , userIdMiddleware , userMiddleware, async (req, res) => {
+  const { productId , quantity } = req.body;
+  const userId = req.userId;
   try {
     console.log(new Date().toLocaleTimeString());
     await ordersModel.create({

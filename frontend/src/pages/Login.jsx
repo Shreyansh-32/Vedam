@@ -46,13 +46,13 @@ const Login = () => {
                             }}>Sign Up</button>
                         </div>
                         <div className="flex flex-col items-center gap-12 pt-14">
-                            <input type="text" value = {email} placeholder="Email" className="w-2/3 pl-3 py-2 rounded-full bg-[#FAF1DA] border-2 border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic" onChange={(e) => {
+                            <input type="text" value = {email} placeholder="Email" className="w-2/3 pl-3 py-2 rounded-full bg-[#FAF1DA] border-2 border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic focus:outline-none focus:border-[#70401ec1]" onChange={(e) => {
                                 setEmail(e.target.value);
                             }}/>
-                            <input type="password" value = {password} placeholder="Password" className="w-2/3 pl-3 py-2 rounded-full bg-[#FAF1DA] border-2 border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic" onChange = {(e) => {
+                            <input type="password" value = {password} placeholder="Password" className="w-2/3 pl-3 py-2 rounded-full bg-[#FAF1DA] border-2 border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic focus:outline-none focus:border-[#70401ec1]" onChange = {(e) => {
                                 setPassword(e.target.value);
                             }}/>
-                            <button className="bg-[#FAF1DA] w-[35%] rounded-full p-3 text-[20px] font-medium text-[#70401ec1]"
+                            <button className="bg-[#FAF1DA] w-[35%] rounded-full p-3 text-[20px] font-medium text-[#70401ec1] active:translate-x-[2px] active:translate-y-[2px] active:transition-all active:delay-75 active:shadow-2xl"
                             onClick={() => {
                                 axios.post('http://localhost:3000/user/signin' , {
                                     email: email,
@@ -102,21 +102,21 @@ const Login = () => {
                                 </button>
                         </div>
                         <div className="flex flex-col items-center gap-7 pt-14">
-                            <input type="text" value = {emailS} placeholder="Email" className="w-2/3 pl-3 py-2 rounded-full bg-[#FAF1DA] border-2 border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic" onChange={(e) => {
+                            <input type="text" value = {emailS} placeholder="Email" className="w-2/3 pl-3 py-2 rounded-full bg-[#FAF1DA] border-2 border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic focus:outline-none focus:border-[#70401ec1]" onChange={(e) => {
                                 setEmailS(e.target.value);
                             }}/>
-                            <input type="text" value = {passwordS} placeholder="Password" className="w-2/3 pl-3 py-2 rounded-full bg-[#FAF1DA] border-2 border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic" onChange={(e) => {
+                            <input type="text" value = {passwordS} placeholder="Password" className="w-2/3 pl-3 py-2 rounded-full bg-[#FAF1DA] border-2 border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic focus:outline-none focus:border-[#70401ec1]" onChange={(e) => {
                                 setPasswordS(e.target.value);
                             }}/>
                             <div className="flex w-full justify-center">
-                                <input type="text" value = {firstName} placeholder="First Name" className="w-1/3 pl-3 py-2 rounded-l-full bg-[#FAF1DA] border-2 border-r-[0.5px] border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic" onChange = {(e) => {
+                                <input type="text" value = {firstName} placeholder="First Name" className="w-1/3 pl-3 py-2 rounded-l-full bg-[#FAF1DA] border-2 border-r-[0.5px] border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic focus:outline-none focus:border-[#70401ec1]" onChange = {(e) => {
                                     setFirstName(e.target.value);
                                 }}/>
-                                <input type="text" value = {lastName} placeholder="Last Name" className="w-1/3 pl-3 py-2 rounded-r-full bg-[#FAF1DA] border-2 border-l-[0.5px] border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic" onChange={(e) => {
+                                <input type="text" value = {lastName} placeholder="Last Name" className="w-1/3 pl-3 py-2 rounded-r-full bg-[#FAF1DA] border-2 border-l-[0.5px] border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic focus:outline-none focus:border-[#70401ec1]" onChange={(e) => {
                                     setLastName(e.target.value);
                                 }}/>
                             </div>
-                            <input type="number" value = {phone} placeholder="Phone" className="w-2/3 pl-3 py-2 rounded-full bg-[#FAF1DA] border-2 border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic" onChange = {(e) => {
+                            <input type="number" value = {phone} placeholder="Phone" className="w-2/3 pl-3 py-2 rounded-full bg-[#FAF1DA] border-2 border-[#EECB83] placeholder-[#70401ec1] placeholder:text-[20px] placeholder:italic focus:outline-none focus:border-[#70401ec1] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" onChange = {(e) => {
                                 setPhone(e.target.value);
                             }}/>
                             <button className="bg-[#FAF1DA] w-[35%] rounded-full p-3 text-[20px] font-medium text-[#70401ec1]"
