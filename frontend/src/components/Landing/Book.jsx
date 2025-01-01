@@ -21,7 +21,7 @@ const Book = () => {
         setHistoric(history.data.books);
 
         const hindi = await axios.get(
-          "http://localhost:3000/products/search/category/Hindi Literature"
+          "http://localhost:3000/products/search/category/Hindi literature"
         );
         setHindiLiterature(hindi.data.books);
       } catch (error) {
@@ -34,7 +34,7 @@ const Book = () => {
 
   return (
     <div>
-      <div className="mt-[176px] ml-[150px] h-[520px]">
+      <div className="mt-[176px] ml-[150px] h-[520px] mb-[222px]">
         <div>
           <h4 className="w-[229px] text-[36px] font-semibold text-[#3C1F0E] tracking-tighter">
             Most popular
@@ -52,14 +52,14 @@ const Book = () => {
                 </div>
               </div>
               <div className="absolute top-[47px] left-[66px]">
-                <img src={val.imageUrl} alt={val.title} />
+                <img src={`${val.imageUrl}`} alt={val.title} />
               </div>
               <div className="absolute top-[314px] left-[25px]">
-                <h4 className="w-[215px] text-[20px] text-[#3C1F0E] leading-5 font-normal">
+                <h4 className="w-auto text-[20px] text-[#3C1F0E] leading-5 font-normal">
                   {val.title}
                 </h4>
               </div>
-              <div className="absolute top-[358px] left-[25px]">
+              <div className="absolute top-[340px] left-[25px]">
                 <h5 className="text-[#414E6E] text-[14px] font-semibold">
                   {val.writer}
                 </h5>
@@ -72,7 +72,169 @@ const Book = () => {
                 </div>
               </div>
               <div className="absolute top-[373px] left-[161px]">
-                <button className="w-[124px] h-[32px] bg-[#C3D9FA] text-[16px] rounded-full font-medium border border-[#284DCD]">
+                <button className="w-[124px] h-[32px] bg-[#C3D9FA] text-[16px] rounded-full font-medium border border-[#284DCD]"
+                onClick={async() => {
+                  try{
+                    const res = await axios.post("http://localhost:3000/user/addcart" , {
+                      productId : val._id,
+                      quantity : 1
+                    },
+                    {
+                      headers : {token : localStorage.token}
+                    }
+                  );
+                    if(res.status === 403){
+                      alert("Please log in first")
+                      window.location.href("/login")
+                    }
+                    else if(res.status === 500)alert("Internal server error");
+                    else if(res.status === 200){
+                      alert("Added to cart successfully");
+                    }
+                  }
+                  catch(err){
+                    alert("Please login first");
+                    window.location.href = '/login';
+                  }
+                }}>
+                  Add to cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-[176px] ml-[150px] h-[520px]">
+        <div>
+          <h4 className="w-[229px] text-[36px] font-semibold text-[#3C1F0E] tracking-tighter">
+            Historic
+          </h4>
+        </div>
+        <div className="mt-[65px] flex gap-[30px]">
+          {historic.map((val, index) => (
+            <div
+              key={index}
+              className="w-[300px] h-[420px] bg-[#F5E0B3] rounded-[17px] relative"
+            >
+              <div className="absolute top-[13px] left-[16px]">
+                <div className="w-[60px] h-[22px] bg-[#CCDBF9] rounded-full flex justify-center items-center">
+                  <h6 className="text-[#3C1F0E] text-[14px] font-medium">New</h6>
+                </div>
+              </div>
+              <div className="absolute top-[47px] left-[66px]">
+                <img src={`${val.imageUrl}`} alt={val.title} />
+              </div>
+              <div className="absolute top-[314px] left-[25px]">
+                <h4 className="w-[215px] text-[20px] text-[#3C1F0E] leading-5 font-normal">
+                  {val.title}
+                </h4>
+              </div>
+              <div className="absolute top-[340px] left-[25px]">
+                <h5 className="text-[#414E6E] text-[14px] font-semibold">
+                  {val.writer}
+                </h5>
+              </div>
+              <div className="absolute top-[380px] left-[25px]">
+                <div className="flex w-[44px]">
+                  <h5 className="text-[16px] font-semibold text-[#3C1F0E]">
+                    ₹ {val.price}
+                  </h5>
+                </div>
+              </div>
+              <div className="absolute top-[373px] left-[161px]">
+                <button className="w-[124px] h-[32px] bg-[#C3D9FA] text-[16px] rounded-full font-medium border border-[#284DCD]" onClick={async() => {
+                  try{
+                    const res = await axios.post("http://localhost:3000/user/addcart" , {
+                      productId : val._id,
+                      quantity : 1
+                    },
+                    {
+                      headers : {token : localStorage.token}
+                    }
+                  );
+                    if(res.status === 403){
+                      alert("Please log in first")
+                      window.location.href("/login")
+                    }
+                    else if(res.status === 500)alert("Internal server error");
+                    else if(res.status === 200){
+                      alert("Added to cart successfully");
+                    }
+                  }
+                  catch(err){
+                    alert("Please login first");
+                    window.location.href = '/login';
+                  }
+                }}>
+                  Add to cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-[176px] ml-[150px] h-[520px] mb-[222px]">
+        <div>
+          <h4 className="w-auto text-[36px] font-semibold text-[#3C1F0E] tracking-tighter">
+            Hindi Literature
+          </h4>
+        </div>
+        <div className="mt-[65px] flex gap-[30px]">
+          {hindiLiterature.map((val, index) => (
+            <div
+              key={index}
+              className="w-[300px] h-[420px] bg-[#F5E0B3] rounded-[17px] relative"
+            >
+              <div className="absolute top-[13px] left-[16px]">
+                <div className="w-[60px] h-[22px] bg-[#CCDBF9] rounded-full flex justify-center items-center">
+                  <h6 className="text-[#3C1F0E] text-[14px] font-medium">New</h6>
+                </div>
+              </div>
+              <div className="absolute top-[47px] left-[66px]">
+                <img src={`${val.imageUrl}`} alt={val.title} />
+              </div>
+              <div className="absolute top-[314px] left-[25px]">
+                <h4 className="w-[215px] text-[20px] text-[#3C1F0E] leading-5 font-normal">
+                  {val.title}
+                </h4>
+              </div>
+              <div className="absolute top-[340px] left-[25px]">
+                <h5 className="text-[#414E6E] text-[14px] font-semibold">
+                  {val.writer}
+                </h5>
+              </div>
+              <div className="absolute top-[380px] left-[25px]">
+                <div className="flex w-[44px]">
+                  <h5 className="text-[16px] font-semibold text-[#3C1F0E]">
+                    ₹ {val.price}
+                  </h5>
+                </div>
+              </div>
+              <div className="absolute top-[373px] left-[161px]">
+                <button className="w-[124px] h-[32px] bg-[#C3D9FA] text-[16px] rounded-full font-medium border border-[#284DCD]" onClick={async() => {
+                  try{
+                    const res = await axios.post("http://localhost:3000/user/addcart" , {
+                      productId : val._id,
+                      quantity : 1
+                    },
+                    {
+                      headers : {token : localStorage.token}
+                    }
+                  );
+                    if(res.status === 403){
+                      alert("Please log in first")
+                      window.location.href("/login")
+                    }
+                    else if(res.status === 500)alert("Internal server error");
+                    else if(res.status === 200){
+                      alert("Added to cart successfully");
+                    }
+                  }
+                  catch(err){
+                    alert("Please login first");
+                    window.location.href = '/login';
+                  }
+                }}>
                   Add to cart
                 </button>
               </div>

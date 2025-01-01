@@ -12,7 +12,9 @@ const Hero = () => {
             <h4 className="text-[24px] text-[#70401E] tracking-tighter w-[395px] leading-6 mt-[15px] font-medium">Books Reborn, Stories Revisited
             From Every Corner, For Every Reader
             </h4>
-            <button className="bg-[#EECB83] w-[181px] h-[56px] mt-[40px] rounded-full text-[20px] font-normal px-[26px] py-[13px]">
+            <button className="bg-[#EECB83] w-[181px] h-[56px] mt-[40px] rounded-full text-[20px] font-normal px-[26px] py-[13px]" onClick={() => {
+                window.location.href = "/products";
+            }}>
                 <div className="flex">
                     Shop now <img src={Arrow} alt="Arrow" className="w-[30px] h-[30px]"/>
                 </div>

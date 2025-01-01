@@ -4,6 +4,7 @@ import Cart from "../../assets/Cart.png";
 import Profile from "../../assets/Profile.png";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const [login , setLogin] = useState(false);
 
@@ -13,7 +14,9 @@ const Navbar = () => {
   if(login){
     return (
       <nav className="bg-[#F3D9A0] w-full h-[100px] flex justify-between items-center">
-        <img src={Logo} alt="Logo" className="ml-[150px]" />
+        <img src={Logo} alt="Logo" className="ml-[150px] cursor-pointer" onClick={() => {
+          window.location.href = "/";
+        }}/>
         <div className="flex items-center h-[50px] relative">
           <input
             type="text"
@@ -25,7 +28,9 @@ const Navbar = () => {
           </button>
         </div>
         <div className="flex gap-[45px] mr-[150px]">
-          <button className="h-[50px] w-[50px] rounded-full bg-[#FAF1DA] flex justify-center items-center border-2 border-[#E0942F]"><img src={Cart} alt="Cart" className="w-6 h-6" /></button>
+          <button className="h-[50px] w-[50px] rounded-full bg-[#FAF1DA] flex justify-center items-center border-2 border-[#E0942F]" onClick={() => {
+            window.location.href = "/cart";
+          }}><img src={Cart} alt="Cart" className="w-6 h-6" /></button>
           <button className="h-[50px] w-[50px] rounded-full bg-[#FAF1DA] flex justify-center items-center border-2 border-[#E0942F]"><img src={Profile} alt="Cart" className="w-6 h-6" /></button>          
         </div>
       </nav>
